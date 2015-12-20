@@ -1,0 +1,45 @@
+{
+    'already_logged_in': '你早已登入了。',
+    'must_logged_in': '你必須登入。',
+    'welcome_title': '歡迎回來！'
+}
+
+
+{
+    'already.logged_in': '已經登入。',
+    'must.logged_in': '必須登入',
+    'welcome_'
+}
+
+
+{
+    'You have already been logged in.': '你早已登入了。',
+}
+
+
+"already_logged_in" => "已經登入。",
+"x_post" => [0 => "%s 篇文章", 1 => "%s 篇文章"]
+
+
+
+
+
+
+
+
+
+
+__('already_logged_in');
+
+_e('welcome_back');
+
+_e('Welcome back!');
+
+_e('review_this_year');
+
+_e('Review_This_Year');
+
+
+_e('post', 'noun')
+
+_e('')
