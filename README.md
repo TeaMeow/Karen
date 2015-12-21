@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="x"/>
+  <img src="http://imgur.com/Ge3Yb36.png"/>
 </p>
 <p align="center">
   <i>Hey! Ohayō gojaimasu!</i>
