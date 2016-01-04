@@ -48,6 +48,8 @@
   * 預設語系
 
 3. 九条 カレン
+ 
+4. 可參考文件
 
 &nbsp;
 
@@ -101,3 +103,11 @@ new Karen('languages/', 'zh_TW')
 # 九条 カレン
 
 ![What?](http://imgur.com/cvvTFKE.png)
+
+# 可參考文件
+
+這裡是幾個可能會啟發你的創意，或者是更有利於你使用可憐的連結。
+
+[What’s the difference between __(), _e(), _x(), and _ex()?](http://wpengineer.com/2237/whats-the-difference-between-__-_e-_x-and-_ex/)
+
+[Wordpress 语言包设置和翻译](http://falconchen.github.io/2014/08/27/wordpress-language-package/)
