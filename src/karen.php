@@ -35,6 +35,7 @@ class Karen
     static $urlPrefix    = 'lang';
     static $cookiePrefix = 'karen_language';
     static $languagePath = '';
+    static $textDomain   = 'default';
     static $library      = [];
     
     static function initialize($languagePath)
@@ -47,7 +48,7 @@ class Karen
     
     static function getString($token)
     {
-        return isset(self::$library[$token]) ? self::$library[$token] : null;
+        return isset(self::$library[$token]) ? self::$library[$token] : $token;
     }
     
     
@@ -59,7 +60,7 @@ class Karen
     
     static function loadLanguage()
     {
-        $path = self::$languagePath . self::$language . '.php';
+        $path = self::$languagePath . self::$language . '/' . self::$textDomain . '.php';
 
         if(file_exists($path))
         {
@@ -67,6 +68,12 @@ class Karen
             
             self::$library = $library;
         }
+    }
+    
+    static function textDomain($domainName = null)
+    {
+        self::$textDomain = $domainName;
+        self::loadLanguage();
     }
     
     static function detect()
