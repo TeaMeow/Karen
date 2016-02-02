@@ -43,14 +43,98 @@ function _ef($string, $variables)
 
 class Karen
 {
-    static $language     = false;
-    static $defaultLanguage     = false;
-    static $urlPrefix    = 'lang';
+    /**
+     * Language
+     * 
+     * The main language.
+     * 
+     * @var string
+     */
+     
+    static $language = '';
+    
+    /**
+     * Default Language
+     * 
+     * The default language, when there's no translated string for the main language,
+     * we search the library of the default language.
+     * 
+     * @var string
+     */
+     
+    static $defaultLanguage = '';
+    
+    /**
+     * Url Prefix
+     * 
+     * The GET parameter to change the current main language.
+     * 
+     * @var string
+     */
+     
+    static $urlPrefix = 'lang';
+    
+    /**
+     * Cookie Prefix
+     * 
+     * The name of the cookie to change the current main language.
+     * 
+     * @var string
+     */
+     
     static $cookiePrefix = 'karen_language';
+    
+    /**
+     * Language Path
+     * 
+     * The path of the language files.
+     * 
+     * @var string
+     */
+     
     static $languagePath = '';
-    static $textDomain   = 'default';
-    static $library      = [];
+    
+    /**
+     * Text Domain
+     * 
+     * The current text domain.
+     * 
+     * @var string
+     */
+     
+    static $textDomain = 'default';
+    
+    /**
+     * Library
+     * 
+     * Stores the translated strings.
+     * 
+     * @var array
+     */
+     
+    static $library = [];
+    
+    /**
+     * Default Library
+     * 
+     * Stores the translated strings of the default language.
+     * 
+     * @var array
+     */
+     
     static $defaultLibrary = [];
+    
+    
+    
+    
+    /**
+     * Initialize
+     * 
+     * Initialize Karen with the language path and the default language.
+     * 
+     * @param string $languagePath      The path of the language folder.
+     * @param string $defaultLanguage   The default language, ex: en_us, zh_tw.
+     */
     
     static function initialize($languagePath, $defaultLanguage)
     {
@@ -59,9 +143,23 @@ class Karen
         
         self::detect();
         self::loadLanguage();
-        self::loadDefaultLanguage();
+        self::loadLanguage(true);
     }
     
+    
+    
+    
+    /**
+     * Get String
+     * 
+     * Get the translated string.
+     * 
+     * @param  string $token   The keyword of the translated string.
+     * 
+     * @return string          The transalted string or just a original token 
+     *                         if there's no transled string.
+     */
+     
     static function getString($token)
     {
         if(isset(self::$library[$token]))
@@ -75,21 +173,59 @@ class Karen
     }
     
     
+    
+    
+    /**
+     * Validate ISO
+     * 
+     * Make sure the string is valid with the ISO-639 and ISO-3166.
+     * 
+     * @param string $value   The value to check.
+     * 
+     * @return bool
+     */
+    
     static function validateISO($value)
     {
         return preg_match('/^[a-zA-Z]{2}(_[a-zA-Z]{2})?$/', $value);
     }
     
+    
+    
+    
+    /**
+     * Switch Language
+     * 
+     * Fuck cookie and the GET parameter, force to use this language instead.
+     * 
+     * @param string $language   Again, some thing like en_us or zh_tw.
+     */
+     
     static function switchLanguage($language)
     {
         self::$language = $language;
         self::loadLanguage();
     }
     
+    
+    
+    
+    /**
+     * Parse String
+     * 
+     * Replace the template tag ({@tag}) with the actual value.
+     * 
+     * @param string $string      The original string.
+     * @param array  $variables   Key as the tag name, value as the actual value.
+     * 
+     * @return string
+     */
+     
     static function parseString($string, $variables)
     {
         $search  = [];
         $replace = [];
+        
         foreach($variables as $name => $value)
         {
             array_push($search, '{@' . $name . '}');
@@ -103,36 +239,59 @@ class Karen
     
     
     
-    static function loadLanguage()
+    
+    /**
+     * Load Language
+     * 
+     * Load the language and import the translated strings 
+     * if the language file does exist.
+     * 
+     * @param bool $default   Set true to load the default language library instead of load 
+     *                        the library of the current language.
+     */
+    
+    static function loadLanguage($default = false)
     {
-        $path = self::$languagePath . self::$language . '/' . self::$textDomain . '.php';
+        $language = $default ? self::$defaultLanguage : self::$language;
+        $path     = self::$languagePath . $language . '/' . self::$textDomain . '.php';
 
         if(file_exists($path))
         {
             require($path);
             
-            self::$library = $library;
+            if($default)
+                self::$library        = $library;
+            else
+                self::$defaultLibrary = $library;
         }
     }
     
-    static function loadDefaultLanguage()
-    {
-        $path = self::$languagePath . self::$defaultLanguage . '/' . self::$textDomain . '.php';
-
-        if(file_exists($path))
-        {
-            require($path);
-            
-            self::$defaultLibrary = $library;
-        }
-    }
+    
+    
+    
+    /**
+     * Text Domain
+     * 
+     * Switch the text domain.
+     * 
+     * @param string|null $domainName   The name of the domain, set to default when null.
+     */
     
     static function textDomain($domainName = null)
     {
-        self::$textDomain = $domainName;
+        self::$textDomain = $domainName ?: 'default';
         self::loadLanguage();
     }
     
+    
+    
+    
+    /**
+     * Detect
+     * 
+     * Detect the language which the current user is using.
+     */
+     
     static function detect()
     {
         $url    = self::$urlPrefix;
