@@ -8,13 +8,8 @@ include '../src/karen.php';
 
 
 
-Karen::initialize('../src/languages/');
+Karen::initialize('../src/languages/', 'en_us');
 
-
-_e('not_logged_in');
-
-Karen::textDomain('template');
-
-_e('welcome_title');
+_ef(__('not_logged_in'), ['nickname' => 'Yami Odymel']);
 
 ?>
