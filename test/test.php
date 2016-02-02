@@ -10,6 +10,7 @@ include '../src/karen.php';
 
 Karen::initialize('../src/languages/');
 
-e(Karen::$library);
-
 ?>
+
+
+<div><?= __('welcome_title'); ?></div>
