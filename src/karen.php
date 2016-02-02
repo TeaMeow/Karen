@@ -29,26 +29,49 @@ function _en($token, $number)
     echo _n($token, $number);
 }
 
+function _f($string, $variables)
+{
+    return Karen::parseString($string, $variables);
+}
+
+function _ef($string, $variables)
+{
+    echo _f($string, $variables);
+}
+
+
+
 class Karen
 {
     static $language     = false;
+    static $defaultLanguage     = false;
     static $urlPrefix    = 'lang';
     static $cookiePrefix = 'karen_language';
     static $languagePath = '';
     static $textDomain   = 'default';
     static $library      = [];
+    static $defaultLibrary = [];
     
-    static function initialize($languagePath)
+    static function initialize($languagePath, $defaultLanguage)
     {
         self::$languagePath = $languagePath;
+        self::$defaultLanguage = $defaultLanguage;
         
         self::detect();
         self::loadLanguage();
+        self::loadDefaultLanguage();
     }
     
     static function getString($token)
     {
-        return isset(self::$library[$token]) ? self::$library[$token] : $token;
+        if(isset(self::$library[$token]))
+            $string = self::$library[$token];
+        elseif(isset(self::$defaultLibrary[$token]))
+            $string = self::$defaultLibrary[$token];
+        else
+            $string = $token;
+        
+        return $string;
     }
     
     
@@ -56,6 +79,28 @@ class Karen
     {
         return preg_match('/^[a-zA-Z]{2}(_[a-zA-Z]{2})?$/', $value);
     }
+    
+    static function switchLanguage($language)
+    {
+        self::$language = $language;
+        self::loadLanguage();
+    }
+    
+    static function parseString($string, $variables)
+    {
+        $search  = [];
+        $replace = [];
+        foreach($variables as $name => $value)
+        {
+            array_push($search, '{@' . $name . '}');
+            array_push($replace, $value);
+        }
+
+        $string = str_replace($search, $replace, $string);
+        
+        return $string;
+    }
+    
     
     
     static function loadLanguage()
@@ -67,6 +112,18 @@ class Karen
             require($path);
             
             self::$library = $library;
+        }
+    }
+    
+    static function loadDefaultLanguage()
+    {
+        $path = self::$languagePath . self::$defaultLanguage . '/' . self::$textDomain . '.php';
+
+        if(file_exists($path))
+        {
+            require($path);
+            
+            self::$defaultLibrary = $library;
         }
     }
     
