@@ -1,3 +1,3 @@
 <?php
-$library = ['welcome_title' => [ 0 => 'a', 1 => 'b']];
+$library = ['not_loggedd_in' => [ 0 => '{@nickname} 你尚未登入！', 1 => 'b']];
 ?>
