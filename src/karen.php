@@ -1,30 +1,32 @@
 <?php
 function __($token)
 {
-    return Karen::getString($token);
+    $isArray = is_array(Karen::getString($token));
+    
+    return $isArray ? Karen::getString($token)[0] : Karen::getString($token);
 }
 
 function _e($token)
 {
-    echo Karen::getString($token);
+    echo __($token);
 }
 
 function _n($token, $number)
 {
+    $isArray = is_array(Karen::getString($token));
     
+    if(!$isArray)
+        return Karen::getString($token);
+    
+    if($number == 0 || $number == 1)
+        return Karen::getString($token)[0];
+    else
+        return Karen::getString($token)[1];
 }
 
 function _en($token, $number)
 {
-    $isArray = is_array(Karen::getString());
-    
-    if(!$isArray)
-        echo Karen::getString($token);
-    
-    if($number == 0 || $number == 1)
-        echo Karen::getString($token)[0];
-    else
-        echo Karen::getString($token)[1];
+    echo _n($token, $number);
 }
 
 class Karen
@@ -35,13 +37,19 @@ class Karen
     static $languagePath = '';
     static $library      = [];
     
-    function initialize($languagePath)
+    static function initialize($languagePath)
     {
         self::$languagePath = $languagePath;
         
         self::detect();
         self::loadLanguage();
     }
+    
+    static function getString($token)
+    {
+        return isset(self::$library[$token]) ? self::$library[$token] : null;
+    }
+    
     
     static function validateISO($value)
     {
